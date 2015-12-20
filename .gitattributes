@@ -1,0 +1,23 @@
+// text
+* text auto
+*.java text eol=lf
+*.txt eol=lf
+*.md eol=lf
+
+// executables
+*.sh text eol=lf
+*.bat text eol=crlf
+
+// binaries
+*.dat binary
+*.bin binary
+*.png binary
+*.exe binary
+*.dll binary
+*.zip binary
+*.jar binary
+*.7z binary
+*.db binary
+
+// specific
+gradlew text eol=lf
