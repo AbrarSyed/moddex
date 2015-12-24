@@ -9,7 +9,7 @@ import (
 	"github.com/codegangsta/negroni"
 )
 
-type config struct {
+type Config struct {
 	Port int
 	MavenDir string
 }
@@ -20,7 +20,7 @@ func main() {
 	defer ErrorHandler()
 
 	// parse config
-	var conf config
+	var conf Config
 	if _, err := toml.DecodeFile("moddex.conf", &conf); err != nil {
 		panic(err)
 	}
@@ -31,13 +31,13 @@ func main() {
 	// global middleware for logging and panic recovery
 	n := negroni.New(negroni.NewLogger(), negroni.NewRecovery())
 
-	router.PathPrefix("maven").Subrouter() // TODO: maven router
-	router.PathPrefix("rest/v0.1").Subrouter() // TODO: rest API
+	MavenInit(conf, router.PathPrefix("/maven").Subrouter())
+	router.PathPrefix("/rest/v0.1").Subrouter() // TODO: rest API
 
 	// serve angular properly
 	router.PathPrefix("/").Handler(negroni.New(
 		negroni.NewStatic(http.Dir("./angular/")),
-		negroni.HandlerFunc(Index),
+//		negroni.HandlerFunc(Index),
 	))
 
 	// launch!
