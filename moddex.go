@@ -34,13 +34,11 @@ func main() {
 	router.PathPrefix("maven").Subrouter() // TODO: maven router
 	router.PathPrefix("rest/v0.1").Subrouter() // TODO: rest API
 
-	// redirect root to web
-	router.HandleFunc("/", func(resp http.ResponseWriter, req *http.Request) {
-		http.Redirect(resp, req, "/web/", 301)
-	})
-
-	// angular web
-	router.PathPrefix("/web/").Handler(http.StripPrefix("/web", http.FileServer(http.Dir("./angular/"))))
+	// serve angular properly
+	router.PathPrefix("/").Handler(negroni.New(
+		negroni.NewStatic(http.Dir("./angular/")),
+		negroni.HandlerFunc(Index),
+	))
 
 	// launch!
 	n.UseHandler(router)
@@ -52,4 +50,8 @@ func ErrorHandler() {
 		fmt.Println("Moddex died: ", err)
 		os.Exit(1)
 	}
+}
+
+func Index(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	http.ServeFile(rw, r, "angular/index.html")
 }
