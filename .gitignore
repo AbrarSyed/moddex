@@ -30,9 +30,11 @@ _testmain.go
 *.iws
 out
 
-# gin
+# other stuff
 gin-bin
-
-# the app
 moddex
+
+# config
+/moddex.conf
+maven/
 

@@ -1,19 +1,31 @@
 package main
 
 import (
-//	"log"
+	"os"
+	"fmt"
+	"github.com/BurntSushi/toml"
 	"net/http"
-	//"encoding/json"
-	//"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/codegangsta/negroni"
 )
 
-type thing struct {
-	data string
+type config struct {
+	Port int
+	MavenDir string
 }
 
 func main() {
+	// parse config
+	var conf config
+	if _, err := toml.DecodeFile("moddex.conf", &conf); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Printf(" port -> %d \n", conf.Port)
+	fmt.Printf(" maven dir -> %s \n", conf.MavenDir)
+
+	// get gorilla router
 	router := mux.NewRouter()
 
 	// global stuff
@@ -32,5 +44,5 @@ func main() {
 
 	// launch!
 	n.UseHandler(router)
-	n.Run(":8080")
+	n.Run(fmt.Sprint(":", conf.Port))
 }
