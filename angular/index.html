@@ -19,7 +19,20 @@
 <body>
     <div ng-include="'header.html'"></div>
 
-    HELLO WORLD!
+    <!-- search -->
+    <div class="container-fluid">
+        <form class="container" style="max-width: 800px" ng-controller="SearchController as search" ng-submit="search.search()">
+            <!--ng-submit="console.log('test1')">-->
+            <div class="input-group ">
+                <input type="text", placeholder="Search..." class="form-control" ng-model="search.query" autofocus />
+                <span class="input-group-btn" >
+                    <button type="submit" class="btn btn-primary" >
+                        <span class="fa fa-search" ></span>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
 
 </body>
 </html>

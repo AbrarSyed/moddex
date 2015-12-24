@@ -30,8 +30,10 @@ _testmain.go
 *.iws
 out
 
-# other stuff
-gin-bin
+# fresh runner
+/tmp/
+
+# compiled binary
 moddex
 
 # config

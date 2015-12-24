@@ -15,24 +15,24 @@ type config struct {
 }
 
 func main() {
+
+	// top level error handling
+	defer ErrorHandler()
+
 	// parse config
 	var conf config
 	if _, err := toml.DecodeFile("moddex.conf", &conf); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
-
-	fmt.Printf(" port -> %d \n", conf.Port)
-	fmt.Printf(" maven dir -> %s \n", conf.MavenDir)
 
 	// get gorilla router
 	router := mux.NewRouter()
 
-	// global stuff
+	// global middleware for logging and panic recovery
 	n := negroni.New(negroni.NewLogger(), negroni.NewRecovery())
 
-	router.PathPrefix("maven").Subrouter() // maven router
-	router.PathPrefix("rest/v0.1").Subrouter() // rest API
+	router.PathPrefix("maven").Subrouter() // TODO: maven router
+	router.PathPrefix("rest/v0.1").Subrouter() // TODO: rest API
 
 	// redirect root to web
 	router.HandleFunc("/", func(resp http.ResponseWriter, req *http.Request) {
@@ -45,4 +45,11 @@ func main() {
 	// launch!
 	n.UseHandler(router)
 	n.Run(fmt.Sprint(":", conf.Port))
+}
+
+func ErrorHandler() {
+	if err := recover(); err != nil {
+		fmt.Println("Moddex died: ", err)
+		os.Exit(1)
+	}
 }
