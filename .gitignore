@@ -29,3 +29,10 @@ _testmain.go
 .idea
 *.iws
 out
+
+# gin
+gin-bin
+
+# the app
+moddex
+
